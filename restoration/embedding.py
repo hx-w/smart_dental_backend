@@ -41,3 +41,5 @@ def embedding_impl(hash_t: str):
     embedding_path = os.path.join(lib.DentalFileT.BASE.value, hash_t, lib.DentalFileT.EMBEDDING.value)
     
     np.savez(embedding_path, fitted_embedding, fitted_trans)
+    
+    del _embed, fitted_embedding, fitted_trans

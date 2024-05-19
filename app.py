@@ -4,6 +4,7 @@ from fastapi import (
     FastAPI, UploadFile, File,
     HTTPException, Depends
 )
+from fastapi.responses import FileResponse
 
 import lib
 from authentication import verify_token
@@ -47,7 +48,7 @@ async def api_dental_restoration_embedding(token: str, _=Depends(verify_token)):
         restoration.embedding_impl(token)
     
     except Exception as e:
-        raise HTTPException(status_code=501, detail=f'Preprocess err: {e}')
+        raise HTTPException(status_code=501, detail=f'Embedding err: {e}')
     
     return {'timecost': 0}
 
@@ -57,12 +58,12 @@ async def api_dental_restoration_extract(token: str, _=Depends(verify_token)):
         raise HTTPException(status_code=403, detail='Token expired')
     
     try:
-        restoration.mesh_extract_impl(token)
+        ripsta_path = restoration.mesh_extract_impl(token)
     
     except Exception as e:
-        raise HTTPException(status_code=501, detail=f'Preprocess err: {e}')
+        raise HTTPException(status_code=501, detail=f'Extract err: {e}')
     
-    return {'timecost': 0}
+    return FileResponse(ripsta_path)
 
 
 if __name__ == "__main__":
