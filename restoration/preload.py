@@ -30,4 +30,4 @@ for mname in models.keys():
     models[mname]['model'].cuda()
 
 
-print('== PyTorch models loaded ==')
+print('== PyTorch [restoration] models loaded ==')

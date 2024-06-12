@@ -9,13 +9,11 @@ from fastapi.responses import FileResponse
 import lib
 from authentication import verify_token
 import restoration
+import segmentation
 
 
 smtapp = FastAPI()
 
-@smtapp.get('/')
-async def root():
-    return {"message": "Hello World"}
 
 @smtapp.post('/register')
 async def api_register_geometry(file: UploadFile = File(...), _=Depends(verify_token)):
@@ -29,14 +27,19 @@ async def api_register_geometry(file: UploadFile = File(...), _=Depends(verify_t
 
 @smtapp.post('/segmentation')
 async def api_dental_segementation(token: str, is_upper: bool, do_registration: bool=True, _=Depends(verify_token)):
+    if not lib.check_filepath_exist(token, lib.DentalFileT.RAW_INPUT.value):
+        raise HTTPException(status_code=403, detail='Token expired')
+    try:
+        labels = segmentation.inference_impl(token, ['lower', 'upper'][int(is_upper)], do_registration)
+    except Exception as e:
+        raise HTTPException(status_code=501, detail=f'Preprocess err: {e}')
     
-    return {'timecost': 0}
+    return {'labels': labels}
 
 @smtapp.post('/restoration/preprocess')
 async def api_dental_restoration_preprocess(token: str, _=Depends(verify_token)):
     if not lib.check_filepath_exist(token, lib.DentalFileT.RAW_INPUT.value):
         raise HTTPException(status_code=403, detail='Token expired')
-    
     try:
         restoration.preprocess_impl(token)
     except Exception as e:
@@ -48,7 +51,6 @@ async def api_dental_restoration_preprocess(token: str, _=Depends(verify_token))
 async def api_dental_restoration_embedding(token: str, _=Depends(verify_token)):
     if not lib.check_filepath_exist(token, lib.DentalFileT.DATASET.value):
         raise HTTPException(status_code=403, detail='Token expired')
-    
     try:
         restoration.embedding_impl(token)
     
@@ -61,7 +63,6 @@ async def api_dental_restoration_embedding(token: str, _=Depends(verify_token)):
 async def api_dental_restoration_extract(token: str, _=Depends(verify_token)):
     if not lib.check_filepath_exist(token, lib.DentalFileT.EMBEDDING.value):
         raise HTTPException(status_code=403, detail='Token expired')
-    
     try:
         ripsta_path = restoration.mesh_extract_impl(token)
     

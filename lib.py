@@ -15,6 +15,9 @@ class DentalFileT(Enum):
     EMBEDDING: str = 'embedding.npz'
     RESTORED: str = 'restored.ply'
     
+    # for segmentation
+    STANDARD_JAW: str = 'standard_jaw.ply'
+
 
 def hash_bytes(inp_bytes: bytes) -> str:
     _salt = 'deadbeef'.encode('utf-8')
