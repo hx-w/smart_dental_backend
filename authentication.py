@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from fastapi import Header, HTTPException, Depends
+from fastapi import HTTPException, Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 

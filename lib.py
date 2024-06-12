@@ -9,6 +9,8 @@ from enum import Enum, unique
 class DentalFileT(Enum):
     BASE: str = 'static'
     RAW_INPUT: str = 'basic.ply'
+    
+    # for restoration
     DATASET: str = 'dataset.mat'
     EMBEDDING: str = 'embedding.npz'
     RESTORED: str = 'restored.ply'

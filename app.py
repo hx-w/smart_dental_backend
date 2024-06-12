@@ -27,7 +27,12 @@ async def api_register_geometry(file: UploadFile = File(...), _=Depends(verify_t
     del file_bytes
     return {'token': hash_t}
 
-@smtapp.post('/dental/restoration/preprocess')
+@smtapp.post('/segmentation')
+async def api_dental_segementation(token: str, is_upper: bool, do_registration: bool=True, _=Depends(verify_token)):
+    
+    return {'timecost': 0}
+
+@smtapp.post('/restoration/preprocess')
 async def api_dental_restoration_preprocess(token: str, _=Depends(verify_token)):
     if not lib.check_filepath_exist(token, lib.DentalFileT.RAW_INPUT.value):
         raise HTTPException(status_code=403, detail='Token expired')
@@ -39,7 +44,7 @@ async def api_dental_restoration_preprocess(token: str, _=Depends(verify_token))
     
     return {'timecost': 0}
 
-@smtapp.post('/dental/restoration/embedding')
+@smtapp.post('/restoration/embedding')
 async def api_dental_restoration_embedding(token: str, _=Depends(verify_token)):
     if not lib.check_filepath_exist(token, lib.DentalFileT.DATASET.value):
         raise HTTPException(status_code=403, detail='Token expired')
@@ -52,7 +57,7 @@ async def api_dental_restoration_embedding(token: str, _=Depends(verify_token)):
     
     return {'timecost': 0}
 
-@smtapp.post('/dental/restoration/extract')
+@smtapp.post('/restoration/extract')
 async def api_dental_restoration_extract(token: str, _=Depends(verify_token)):
     if not lib.check_filepath_exist(token, lib.DentalFileT.EMBEDDING.value):
         raise HTTPException(status_code=403, detail='Token expired')

@@ -446,10 +446,9 @@ def convert_sdf_samples_to_ply(
 
     # try writing to the ply file
     mesh = trimesh.Trimesh(vertices=mesh_points, faces=faces)
-
     mesh = sorted(mesh.split(only_watertight=False).tolist(), key=lambda x: x.vertices.shape[0])[-1] 
 
-    mesh.export(ply_filename_out)
+    mesh.export(ply_filename_out, include_normals=True)
 
 
 def convert_sdf_samples_with_color_to_ply(
