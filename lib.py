@@ -8,12 +8,16 @@ from enum import Enum, unique
 @unique
 class DentalFileT(Enum):
     BASE: str = 'static'
+    STANDARD: str = 'standards'
     RAW_INPUT: str = 'basic.ply'
     
     # for restoration
     DATASET: str = 'dataset.mat'
     EMBEDDING: str = 'embedding.npz'
     RESTORED: str = 'restored.obj'
+
+    STANDARD_11: str = 'partial_11.ply'
+    STANDARD_15: str = 'partial_15.ply'
     
     # for segmentation
     STANDARD_JAW: str = 'standard_jaw.ply'

@@ -43,7 +43,7 @@ async def api_dental_restoration_preprocess(token: str, label: int=15, _=Depends
     if not lib.check_filepath_exist(token, lib.DentalFileT.RAW_INPUT.value):
         raise HTTPException(status_code=403, detail='Token expired')
     try:
-        restoration.preprocess_impl(token)
+        restoration.preprocess_impl(token, label)
     except Exception as e:
         raise HTTPException(status_code=501, detail=f'Preprocess err: {e}')
     
@@ -65,11 +65,12 @@ async def api_dental_restoration_embedding(token: str, label: int=15, _=Depends(
 async def api_dental_restoration_extract(token: str, _=Depends(verify_token)):
     if not lib.check_filepath_exist(token, lib.DentalFileT.EMBEDDING.value):
         raise HTTPException(status_code=403, detail='Token expired')
-    try:
-        ripsta_path = restoration.mesh_extract_impl(token)
+    ripsta_path = restoration.mesh_extract_impl(token)
+    # try:
+    #     ripsta_path = restoration.mesh_extract_impl(token)
     
-    except Exception as e:
-        raise HTTPException(status_code=501, detail=f'Extract err: {e}')
+    # except Exception as e:
+    #     raise HTTPException(status_code=501, detail=f'Extract err: {e}')
     
     return FileResponse(ripsta_path)
 

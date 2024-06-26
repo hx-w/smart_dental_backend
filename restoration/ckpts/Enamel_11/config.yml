@@ -1,0 +1,14 @@
+batch_size: 1
+epochs: 100
+expand: -1
+hidden_num: 128
+latent_dim: 128
+part_num: 20
+hyper_hidden_layers: 3
+hyper_hidden_features: 256
+lr: 0.001
+max_points: 500000
+model_type: sine
+num_instances: 50
+on_surface_points: 4000
+checkpoint_path: restoration/ckpts/Enamel_11/model.pth

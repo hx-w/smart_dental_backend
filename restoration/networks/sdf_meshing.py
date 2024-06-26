@@ -15,7 +15,7 @@ import trimesh
 '''Adapted from the DeepSDF repository https://github.com/facebookresearch/DeepSDF
 '''
 
-def create_mesh(model, filename,subject_idx=0, embedding=None, N=128, max_batch=64 ** 3, offset=None, scale=None,level=0.0,get_color=True):
+def create_mesh(model, filename,subject_idx=0, embedding=None, N=128, max_batch=64 ** 3, offset=None, scale=None,level=0.0,get_color=True,transf=None):
     ply_filename = filename
 
     model.eval()
@@ -75,6 +75,7 @@ def create_mesh(model, filename,subject_idx=0, embedding=None, N=128, max_batch=
                     ply_filename,
                     offset,
                     scale,
+                    transf,
                     level
                 )
     else:
@@ -399,6 +400,7 @@ def convert_sdf_samples_to_ply(
     ply_filename_out,
     offset=None,
     scale=None,
+    transf=None,
     level=0.0,
 ):
     """
@@ -447,6 +449,9 @@ def convert_sdf_samples_to_ply(
     # try writing to the ply file
     mesh = trimesh.Trimesh(vertices=mesh_points, faces=faces)
     mesh = sorted(mesh.split(only_watertight=False).tolist(), key=lambda x: x.vertices.shape[0])[-1] 
+    
+    if transf is not None:
+        mesh.apply_transform(transf)
 
     mesh.export(ply_filename_out)
 

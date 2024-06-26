@@ -3,13 +3,16 @@
 import os
 import yaml
 import torch
+import trimesh
+import lib
 from .networks.net import FlexField
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 
 models = {
-    'Enamel_15': None
+    'Enamel_15': None,
+    'Enamel_11': None,
 }
 
 for mname in models.keys():
@@ -28,6 +31,12 @@ for mname in models.keys():
     
     models[mname]['model'].load_state_dict(filtered_state_dict)
     models[mname]['model'].cuda()
+
+    # load standard registration
+    models[mname]['standard'] = trimesh.load(
+        os.path.join(lib.DentalFileT.STANDARD.value, mname.replace('Enamel', 'partial')+'.ply'),
+        force='mesh'
+    )
 
 
 print('== PyTorch [restoration] models loaded ==')

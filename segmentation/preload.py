@@ -46,6 +46,6 @@ model = ScanSegmentation(InferencePipeLine(inference_config))
 
 print('== PyTorch [segmentation] models loaded ==')
 
-_standard_jaw_path = os.path.join(lib.DentalFileT.BASE.value, lib.DentalFileT.STANDARD_JAW.value)
+_standard_jaw_path = os.path.join(lib.DentalFileT.STANDARD.value, lib.DentalFileT.STANDARD_JAW.value)
 
 standard_jaw = trimesh.load(_standard_jaw_path, force='mesh')
