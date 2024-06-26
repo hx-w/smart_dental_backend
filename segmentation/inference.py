@@ -12,7 +12,7 @@ def inference_impl(hash_t: str, jaw_kind='upper', do_reg=True):
     jaw_mesh = trimesh.load(jaw_path, force='mesh')
 
     if do_reg:
-        # jaw_mesh.apply_obb()
+        jaw_mesh.apply_obb()
         
         tmat, _ = trimesh.registration.mesh_other(jaw_mesh, standard_jaw, 50, icp_first=5, icp_final=10)
 

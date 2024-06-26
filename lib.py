@@ -13,7 +13,7 @@ class DentalFileT(Enum):
     # for restoration
     DATASET: str = 'dataset.mat'
     EMBEDDING: str = 'embedding.npz'
-    RESTORED: str = 'restored.ply'
+    RESTORED: str = 'restored.obj'
     
     # for segmentation
     STANDARD_JAW: str = 'standard_jaw.ply'

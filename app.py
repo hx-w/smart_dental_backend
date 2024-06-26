@@ -26,18 +26,20 @@ async def api_register_geometry(file: UploadFile = File(...), _=Depends(verify_t
     return {'token': hash_t}
 
 @smtapp.post('/segmentation')
-async def api_dental_segementation(token: str, is_upper: bool, do_registration: bool=True, _=Depends(verify_token)):
+async def api_dental_segementation(token: str, jaw_kind: str, do_registration: bool=True, _=Depends(verify_token)):
     if not lib.check_filepath_exist(token, lib.DentalFileT.RAW_INPUT.value):
         raise HTTPException(status_code=403, detail='Token expired')
+    if jaw_kind not in ['lower', 'upper']:
+        raise HTTPException(status_code=403, detail='Jaw kind should be `lower` or `upper`')
     try:
-        labels = segmentation.inference_impl(token, ['lower', 'upper'][int(is_upper)], do_registration)
+        labels = segmentation.inference_impl(token, jaw_kind, do_registration)
     except Exception as e:
         raise HTTPException(status_code=501, detail=f'Preprocess err: {e}')
     
     return {'labels': labels}
 
 @smtapp.post('/restoration/preprocess')
-async def api_dental_restoration_preprocess(token: str, _=Depends(verify_token)):
+async def api_dental_restoration_preprocess(token: str, label: int=15, _=Depends(verify_token)):
     if not lib.check_filepath_exist(token, lib.DentalFileT.RAW_INPUT.value):
         raise HTTPException(status_code=403, detail='Token expired')
     try:
@@ -48,7 +50,7 @@ async def api_dental_restoration_preprocess(token: str, _=Depends(verify_token))
     return {'timecost': 0}
 
 @smtapp.post('/restoration/embedding')
-async def api_dental_restoration_embedding(token: str, _=Depends(verify_token)):
+async def api_dental_restoration_embedding(token: str, label: int=15, _=Depends(verify_token)):
     if not lib.check_filepath_exist(token, lib.DentalFileT.DATASET.value):
         raise HTTPException(status_code=403, detail='Token expired')
     try:
