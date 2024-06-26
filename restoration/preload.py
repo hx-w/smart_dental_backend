@@ -18,13 +18,13 @@ models = {
 for mname in models.keys():
     models[mname] = {
         'model': None,
-        'meta_params': None
+        'meta_params': None,
+        'standard': None,
     }
     
     with open(os.path.join('restoration', 'ckpts', mname, 'config.yml'), 'r') as stream:
         models[mname]['meta_params'] = yaml.safe_load(stream)
 
-    
     models[mname]['model'] = FlexField(**models[mname]['meta_params'])
     state_dict = torch.load(models[mname]['meta_params']['checkpoint_path'])
     filtered_state_dict = { k: v for k, v in state_dict.items() if k.find('detach')==-1 }

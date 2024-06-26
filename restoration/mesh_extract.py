@@ -10,8 +10,8 @@ from .networks import sdf_meshing
 from .preload import models
 
 
-def mesh_extract_impl(hash_t: str) -> str:
-    DentalType = 'Enamel_15'
+def mesh_extract_impl(hash_t: str, label: str) -> str:
+    DentalType = f'Enamel_{label}'
     
     embedding_path = os.path.join(lib.DentalFileT.BASE.value, hash_t, lib.DentalFileT.EMBEDDING.value)
     

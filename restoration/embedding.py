@@ -10,8 +10,8 @@ from .networks import dataset
 from .preload import models
 
 
-def embedding_impl(hash_t: str):
-    DentalType = 'Enamel_15'
+def embedding_impl(hash_t: str, label: int):
+    DentalType = f'Enamel_{label}'
     
     mat_path = os.path.join(lib.DentalFileT.BASE.value, hash_t, lib.DentalFileT.DATASET.value)
     

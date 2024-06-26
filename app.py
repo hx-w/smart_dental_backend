@@ -39,7 +39,7 @@ async def api_dental_segementation(token: str, jaw_kind: str, do_registration: b
     return {'labels': labels}
 
 @smtapp.post('/restoration/preprocess')
-async def api_dental_restoration_preprocess(token: str, label: int=15, _=Depends(verify_token)):
+async def api_dental_restoration_preprocess(token: str, label: str, _=Depends(verify_token)):
     if not lib.check_filepath_exist(token, lib.DentalFileT.RAW_INPUT.value):
         raise HTTPException(status_code=403, detail='Token expired')
     try:
@@ -50,11 +50,11 @@ async def api_dental_restoration_preprocess(token: str, label: int=15, _=Depends
     return {'timecost': 0}
 
 @smtapp.post('/restoration/embedding')
-async def api_dental_restoration_embedding(token: str, label: int=15, _=Depends(verify_token)):
+async def api_dental_restoration_embedding(token: str, label: str, _=Depends(verify_token)):
     if not lib.check_filepath_exist(token, lib.DentalFileT.DATASET.value):
         raise HTTPException(status_code=403, detail='Token expired')
     try:
-        restoration.embedding_impl(token)
+        restoration.embedding_impl(token, label)
     
     except Exception as e:
         raise HTTPException(status_code=501, detail=f'Embedding err: {e}')
@@ -62,15 +62,14 @@ async def api_dental_restoration_embedding(token: str, label: int=15, _=Depends(
     return {'timecost': 0}
 
 @smtapp.post('/restoration/extract')
-async def api_dental_restoration_extract(token: str, _=Depends(verify_token)):
+async def api_dental_restoration_extract(token: str, label: str, _=Depends(verify_token)):
     if not lib.check_filepath_exist(token, lib.DentalFileT.EMBEDDING.value):
         raise HTTPException(status_code=403, detail='Token expired')
-    ripsta_path = restoration.mesh_extract_impl(token)
-    # try:
-    #     ripsta_path = restoration.mesh_extract_impl(token)
+    try:
+        ripsta_path = restoration.mesh_extract_impl(token, label)
     
-    # except Exception as e:
-    #     raise HTTPException(status_code=501, detail=f'Extract err: {e}')
+    except Exception as e:
+        raise HTTPException(status_code=501, detail=f'Extract err: {e}')
     
     return FileResponse(ripsta_path)
 
